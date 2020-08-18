@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'notetaking/bootstrap.css' %}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chapter</title>
+</head>
+<body>
+<h1>{{ chapter.chapter_title }}</h1>
+
+{% if definition_list %}
+    <div class="container-fluid">
+
+        <ul>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <form action="{% url 'notetaking:delete_definition' subject.id chapter.id topic.id %}" method="post">
+                    {% csrf_token %}
+                    <label for="sub">Delete definition</label><br>
+                    <input type="submit" value="Submit">
+                </form>
+            </li>
+            <div class="container-fluid" style="word-wrap: break-word;">
+            {% for definition in definition_list %}
+                 <li class="list-group-item justify-content-between align-items-center active" style="width : 20%;">
+                    {{ definition.definition_term }}
+                </li>
+                <li class="list-group-item justify-content-between align-items-center flex-lg-wrap" style="width : 75%; word-wrap: break-word;">
+                    {{ definition.definition_text }}
+                </li>
+            {% endfor %}
+
+            <li class="list-group-item justify-content-between align-items-center" >
+                <form
+                    action="{% url 'notetaking:new_definition' subject_id=subject.id chapter_id=chapter.id topic_id=topic.id %}"
+                    method="post"
+                >
+                    {% csrf_token %}
+                    <label for="term">Create new definition</label><br>
+                    <input type="text" id="term" name="term">
+                    <input type="text" id="text" name="text">
+                    <input type="submit" value="Submit">
+                </form>
+            </li>
+            </div>
+        </ul>
+    </div>
+{% else %}
+    <p>No definitions are available.</p>
+    <form
+        action="{% url 'notetaking:new_definition' subject_id=subject.id chapter_id=chapter.id topic_id=topic.id %}"
+        method="post"
+    >
+        {% csrf_token %}
+        <label for="term">Create new definition</label><br>
+        <input type="text" id="term" name="term">
+        <input type="text" id="text" name="text">
+        <input type="submit" value="Submit">
+    </form>
+{% endif %}
+</body>
+</html>

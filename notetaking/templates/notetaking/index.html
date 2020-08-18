@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'notetaking/bootstrap.css' %}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>the title</title>
+</head>
+<body>
+<nav class="navbar navbar-light bg-light">
+  <span class="navbar-brand mb-0 h1">Note taking app home</span>
+</nav>
+{% if subject_list %}
+    <ul class="list_group">
+    {% for subject in subject_list %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a href="/notetaking/{{ subject.id }}/">{{ subject.subject_title }}</a>
+        </li>
+    {% endfor %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <form action="{% url 'notetaking:new_subject' %}" method="post">
+                {% csrf_token %}
+                <label for="sub">Create new subject</label><br>
+                <input type="text" id="sub" name="sub">
+                <input type="submit" value="Submit">
+            </form>
+        </li>
+
+    </ul>
+{% else %}
+    <p>No Subjects are available.</p>
+    <li><a href="/notetaking/creating" >Create new subject</a></li>
+{% endif %}
+</body>
+</html>

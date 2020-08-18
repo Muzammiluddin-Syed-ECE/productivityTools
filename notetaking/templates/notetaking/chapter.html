@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'notetaking/bootstrap.css' %}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chapter</title>
+</head>
+<body>
+<h1>{{ chapter.chapter_title }}</h1>
+
+{% if topic_list %}
+    <ul class="list_group" >
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <form action="{% url 'notetaking:delete_topic' subject.id chapter.id %}" method="post">
+            {% csrf_token %}
+            <label for="sub">Delete topic</label><br>
+            <input type="submit" value="Submit">
+        </form>
+    </li>
+    {% for topic in topic_list %}
+        <li class="list-group-item d-flex justify-content-between align-items-center" >
+            <a href="/notetaking/{{ subject.id }}/{{ chapter.id }}/{{ topic.id }}">{{ topic.topic_title }}</a>
+        </li>
+    {% endfor %}
+        <li class="list-group-item d-flex justify-content-between align-items-center" >
+            <form action="{% url 'notetaking:new_topic' subject_id=subject.id chapter_id=chapter.id %}" method="post">
+                {% csrf_token %}
+                <label for="sub">Create new topic</label><br>
+                <input type="text" id="sub" name="sub">
+                <input type="submit" value="Submit">
+            </form>
+        </li>
+
+    </ul>
+{% else %}
+    <p>No topics are available.</p>
+    <form action="{% url 'notetaking:new_topic' subject_id=subject.id chapter_id=chapter.id %}" method="post">
+    {% csrf_token %}
+        <label for="sub">Create new topic</label><br>
+        <input type="text" id="sub" name="sub">
+        <input type="submit" value="Submit">
+    </form>
+{% endif %}
+</body>
+</html>
